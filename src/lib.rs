@@ -14,29 +14,8 @@ pub struct Contract {
     metadata: LazyOption<FungibleTokenMetadata>,
 }
 
-const SVG_PARAS_ICON: &str = "";
-const TOTAL_SUPPLY: Balance = 100_000_000_000_000_000_000_000_000;
-
-
 #[near_bindgen]
 impl Contract {
-    #[init]
-    pub fn new_paras_meta(owner_id: AccountId) -> Self {
-        Self::new(
-            owner_id,
-            U128(TOTAL_SUPPLY),
-            FungibleTokenMetadata {
-                spec: FT_METADATA_SPEC.to_string(),
-                name: "LAMA".to_string(),
-                symbol: "LAMA".to_string(),
-                icon: Some(SVG_PARAS_ICON.to_string()),
-                reference: None,
-                reference_hash: None,
-                decimals: 18
-            },
-        )
-    }
-
     #[init]
     pub fn new(
         owner_id: AccountId,
