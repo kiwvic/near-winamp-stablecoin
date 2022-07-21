@@ -62,18 +62,10 @@ impl Contract {
 
         this
     }
-
-    fn on_account_closed(&mut self, account_id: AccountId, balance: Balance) {
-        log!("Closed @{} with {}", account_id, balance);
-    }
-
-    fn on_tokens_burned(&mut self, account_id: AccountId, amount: Balance) {
-        log!("Account @{} burned {}", account_id, amount);
-    }
 }
 
-near_contract_standards::impl_fungible_token_core!(Contract, token, on_tokens_burned);
-near_contract_standards::impl_fungible_token_storage!(Contract, token, on_account_closed);
+near_contract_standards::impl_fungible_token_core!(Contract, token);
+near_contract_standards::impl_fungible_token_storage!(Contract, token);
 
 #[near_bindgen]
 impl FungibleTokenMetadataProvider for Contract {
