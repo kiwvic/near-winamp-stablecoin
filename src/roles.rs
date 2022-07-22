@@ -9,7 +9,7 @@ pub enum ROLES {
 impl Contract {
     pub fn only_role(&self, role: u8) {
         assert!(
-            !(self.roles.get(&env::current_account_id()).unwrap() == role),
+            !(self.roles.get(&env::predecessor_account_id()).unwrap() == role),
             "Wrong role"
         );
     }
