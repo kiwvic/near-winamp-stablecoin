@@ -5,7 +5,7 @@ use near_contract_standards::fungible_token::FungibleToken;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap};
 use near_sdk::json_types::U128;
-use near_sdk::{env, near_bindgen, AccountId, PanicOnDefault, PromiseOrValue};
+use near_sdk::{env, near_bindgen, Balance, AccountId, PanicOnDefault, PromiseOrValue};
 
 mod roles;
 
@@ -38,6 +38,18 @@ impl Contract {
         };
 
         this
+    }
+
+    pub fn mint(&mut self, account: &AccountId, amount: Balance) {
+        self.only_role(ROLES::Manager as u8);
+
+        self.token.internal_deposit(account, amount);
+    }
+
+    pub fn burn(&mut self, account: &AccountId, amount: Balance) {
+        self.only_role(ROLES::Manager as u8);
+
+        self.token.internal_withdraw(account, amount);
     }
 }
 
