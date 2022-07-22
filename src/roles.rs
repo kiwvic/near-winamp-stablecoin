@@ -16,6 +16,12 @@ impl Contract {
 
     #[private]
     pub fn add_role(&mut self, account: &AccountId, role: u8) {
+        assert_eq!(
+            self.roles.contains_key(&account), 
+            false,
+            "Account already has this role"
+        );
+
         self.roles.insert(&account, &role);
     }
 }
