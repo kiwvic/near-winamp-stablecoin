@@ -24,7 +24,6 @@ pub struct Contract {
 impl Contract {
     #[init]
     pub fn new(
-        owner_id: AccountId,
         total_supply: U128,
         metadata: FungibleTokenMetadata,
     ) -> Self {
@@ -37,14 +36,6 @@ impl Contract {
             metadata: LazyOption::new(b"m".to_vec(), Some(&metadata)),
             roles: LookupMap::new(b"r".to_vec()),
         };
-        this.token.internal_register_account(&owner_id);
-        this.token.internal_deposit(&owner_id, total_supply.into());
-
-        near_contract_standards::fungible_token::events::FtMint {
-            owner_id: &owner_id,
-            amount: &total_supply,
-            memo: Some("Initial tokens supply is minted"),
-        }.emit();
 
         this
     }
