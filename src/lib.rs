@@ -24,7 +24,6 @@ pub struct Contract {
 impl Contract {
     #[init]
     pub fn new(
-        total_supply: U128,
         metadata: FungibleTokenMetadata,
     ) -> Self {
         assert!(!env::state_exists(), "Already initialized");
