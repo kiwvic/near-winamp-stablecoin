@@ -2,7 +2,6 @@ use crate::*;
 
 pub enum ROLES {
     Manager = 1,
-    Backend,
 }
 
 #[near_bindgen]
