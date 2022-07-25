@@ -51,6 +51,7 @@ impl Contract {
         this
     }
 
+
     pub fn mint(&mut self, account: &AccountId, amount: Balance) {
         self.only_role(ROLES::Manager as u8);
 
@@ -63,21 +64,60 @@ impl Contract {
         self.token.internal_withdraw(account, amount);
     }
 
+    //
+
     pub fn claim(&mut self, amount: Balance) {
         assert!(amount > 0, "The amount should be a positive number");
-        assert!(self.claim_requests.get(&env::predecessor_account_id()) == None, "Already have request");
+        assert!(self.claim_requests.get(&env::predecessor_account_id()) != None, "Already have request");
 
         self.claim_requests.insert(&env::predecessor_account_id(), &amount);
     }
 
     pub fn cancel_claim(&mut self) {
-        assert!(self.claim_requests.get(&env::predecessor_account_id()) != None, "Have no requests rn");
+        assert!(self.claim_requests.get(&env::predecessor_account_id()) == None, "Have no requests rn");
 
         self.claim_requests.remove(&env::predecessor_account_id());
     }
 
+    pub fn cashout(&mut self, amount: Balance) {
+        assert!(self.cashout_requests.get(&env::predecessor_account_id()) != None, "Already have request for cashout");
+        assert!(self.token.internal_unwrap_balance_of(&env::predecessor_account_id()) < amount, "Not enough funds");
+
+        self.cashout_requests.insert(&env::predecessor_account_id(), &amount);
+    }
+
+    pub fn cancel_cashout(&mut self) {
+        assert!(self.cashout_requests.get(&env::predecessor_account_id()) == None, "Have no requests rn");
+
+        self.cashout_requests.remove(&env::predecessor_account_id());
+    }
+
+    //
+
     pub fn get_all_claim_requests(&self) -> &Vector<AccountId> {
         return self.claim_requests.keys_as_vector();
+    }
+
+    pub fn get_all_cashout_requests(&self) -> &Vector<AccountId> {
+        return self.claim_requests.keys_as_vector();
+    }
+
+    //
+
+    pub fn approve_claim_request(&mut self, account: &AccountId) {
+        self.only_role(ROLES::Manager as u8);
+    }
+
+    pub fn decline_claim_request(&mut self, account: &AccountId) {
+        self.only_role(ROLES::Manager as u8);
+    }
+
+    pub fn approve_cashout_request(&mut self, account: &AccountId) {
+        self.only_role(ROLES::Manager as u8);
+    }
+
+    pub fn decline_cashout_request(&mut self, account: &AccountId) {
+        self.only_role(ROLES::Manager as u8);
     }
 }
 
