@@ -122,10 +122,14 @@ impl Contract {
 
     pub fn decline_claim_request(&mut self, account: &AccountId) {
         self.only_role(ROLES::Manager as u8);
+
+        self.claim_requests.remove(&account);
     }
 
     pub fn decline_cashout_request(&mut self, account: &AccountId) {
         self.only_role(ROLES::Manager as u8);
+
+        self.cashout_requests.remove(&account);
     }
 }
 
