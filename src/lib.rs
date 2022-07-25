@@ -6,18 +6,11 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap, UnorderedMap, Vector};
 use near_sdk::json_types::U128;
 use near_sdk::{env, near_bindgen, Balance, AccountId, PanicOnDefault, PromiseOrValue};
-use near_sdk::serde::{Serialize, Deserialize};
+// use near_sdk::serde::{Serialize, Deserialize};
 
 mod roles;
 
 use crate::roles::*;
-
-// #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
-// #[serde(crate = "near_sdk::serde")]
-// pub struct CashoutOrClaimEvent {
-//     pub account: AccountId,
-//     pub amount: Balance,
-// }
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
@@ -40,28 +33,13 @@ impl Contract {
 
         metadata.assert_valid();
 
-        let mut this = Self {
+        Self {
             token: FungibleToken::new(b"a".to_vec()),
             metadata: LazyOption::new(b"m".to_vec(), Some(&metadata)),
             roles: LookupMap::new(b"r".to_vec()),
             claim_requests: UnorderedMap::new(b"cl".to_vec()),
             cashout_requests: UnorderedMap::new(b"ca".to_vec()),
-        };
-
-        this
-    }
-
-
-    pub fn mint(&mut self, account: &AccountId, amount: Balance) {
-        self.only_role(ROLES::Manager as u8);
-
-        self.token.internal_deposit(account, amount);
-    }
-
-    pub fn burn(&mut self, account: &AccountId, amount: Balance) {
-        self.only_role(ROLES::Manager as u8);
-
-        self.token.internal_withdraw(account, amount);
+        }
     }
 
     //
