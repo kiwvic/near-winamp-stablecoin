@@ -46,29 +46,43 @@ impl Contract {
     //
 
     pub fn claim(&mut self, amount: Balance) {
-        assert!(amount > 0, "The amount should be a positive number");
-        assert!(self.claim_requests.get(&env::predecessor_account_id()) != None, "Already have request");
+        if amount < 0 as Balance {
+            env::panic_str("The amount should be a positive number");
+        }
 
-        self.claim_requests.insert(&env::predecessor_account_id(), &amount);
+        if let Some(_i) = self.claim_requests.get(&env::predecessor_account_id()) {
+            env::panic_str("Already have request for claim");
+        } else {
+            self.claim_requests.insert(&env::predecessor_account_id(), &amount);    
+        }
     }
 
     pub fn cancel_claim(&mut self) {
-        assert!(self.claim_requests.get(&env::predecessor_account_id()) == None, "Have no requests rn");
-
-        self.claim_requests.remove(&env::predecessor_account_id());
+        if let Some(_i) = self.claim_requests.get(&env::predecessor_account_id()) {
+            self.claim_requests.remove(&env::predecessor_account_id());    
+        } else {
+            env::panic_str("Have no requests rn");
+        }
     }
 
     pub fn cashout(&mut self, amount: Balance) {
-        assert!(self.cashout_requests.get(&env::predecessor_account_id()) != None, "Already have request for cashout");
-        assert!(self.token.internal_unwrap_balance_of(&env::predecessor_account_id()) < amount, "Not enough funds");
+        if let Some(_i) = self.cashout_requests.get(&env::predecessor_account_id()) {
+            env::panic_str("Already have request for claim");
+        }
+
+        if self.token.internal_unwrap_balance_of(&env::predecessor_account_id()) < amount {
+            env::panic_str("Not enough funds");
+        }
 
         self.cashout_requests.insert(&env::predecessor_account_id(), &amount);
     }
 
     pub fn cancel_cashout(&mut self) {
-        assert!(self.cashout_requests.get(&env::predecessor_account_id()) == None, "Have no requests rn");
-
-        self.cashout_requests.remove(&env::predecessor_account_id());
+        if let Some(_i) = self.cashout_requests.get(&env::predecessor_account_id()) {
+            self.cashout_requests.remove(&env::predecessor_account_id());    
+        } else {
+            env::panic_str("Have no requests rn");
+        }
     }
 
     //
