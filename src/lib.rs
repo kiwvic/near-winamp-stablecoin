@@ -6,10 +6,12 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap, UnorderedMap, Vector};
 use near_sdk::json_types::U128;
 use near_sdk::{env, near_bindgen, Balance, AccountId, PanicOnDefault, PromiseOrValue};
-// use near_sdk::serde::{Serialize, Deserialize};
+use near_sdk::serde;
 
 mod roles;
+mod utils;
 
+use crate::utils::*;
 use crate::roles::*;
 
 #[near_bindgen]
@@ -72,12 +74,12 @@ impl Contract {
 
     //
 
-    pub fn get_all_claim_requests(&self) -> &Vector<AccountId> {
-        return self.claim_requests.keys_as_vector();
+    pub fn get_all_claim_requests(&self) -> Vec<AccountId> {
+        return vector_to_vec(&self.claim_requests.keys_as_vector());
     }
 
-    pub fn get_all_cashout_requests(&self) -> &Vector<AccountId> {
-        return self.cashout_requests.keys_as_vector();
+    pub fn get_all_cashout_requests(&self) -> Vec<AccountId> {
+        return vector_to_vec(&self.cashout_requests.keys_as_vector());
     }
 
     //
