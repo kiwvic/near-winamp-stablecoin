@@ -6,7 +6,6 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap, UnorderedMap, Vector};
 use near_sdk::json_types::U128;
 use near_sdk::{env, near_bindgen, Balance, AccountId, PanicOnDefault, PromiseOrValue};
-use near_sdk::serde;
 
 mod roles;
 mod utils;
