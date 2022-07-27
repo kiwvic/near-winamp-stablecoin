@@ -14,10 +14,15 @@ impl Contract {
 
     #[private]
     pub fn add_role(&mut self, account: &AccountId, role: u8) {
-        if !self.roles.contains_key(&account) {
-            env::panic_str("Account already has this role");
+        if self.roles.contains_key(&account) {
+            env::panic_str("Account already has role");
         }
 
         self.roles.insert(&account, &role);
+    }
+
+    #[private]
+    pub fn remove_role(&mut self, account: &AccountId) {
+        self.roles.remove(&account);
     }
 }
