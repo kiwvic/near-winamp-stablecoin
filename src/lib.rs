@@ -44,6 +44,17 @@ impl Contract {
             cashout_requests: UnorderedMap::new(b"ca".to_vec()),
         }
     }
+
+    #[payable]
+    fn storage_deposit(
+        &mut self,
+        account_id: Option<AccountId>,
+        registration_only: Option<bool>,
+    ) -> StorageBalance {
+        // TODO panic if not artist
+
+        self.token.storage_deposit(account_id, registration_only)
+    }
 }
 
 near_contract_standards::impl_fungible_token_core!(Contract, token);
